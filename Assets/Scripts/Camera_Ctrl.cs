@@ -18,7 +18,7 @@ public class Camera_Ctrl : MonoBehaviour
     void Update()
     {
         CameraPos = Vector3.MoveTowards(CameraPos, balloon.transform.position, followSpeed * Time.deltaTime);
-        transform.position = new Vector3(CameraPos.x, CameraPos.y + 2, -10);
-        Camera.orthographicSize = CameraPos.y + 5 + 2;
+        transform.position = new Vector3(CameraPos.x, CameraPos.y, -10);
+        Camera.orthographicSize = CameraPos.y + 5;
     }
 }
