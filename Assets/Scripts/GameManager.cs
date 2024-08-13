@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -152,5 +153,10 @@ public class GameManager : MonoBehaviour
             bestTime = nowTime;
         }
         bestTimeText.GetComponent<Text>().text = String.Format("‚³‚¢‚»‚­‚«‚ë‚­\n" + "{0:####.0}" + "‚Ñ‚å‚¤", bestTime);
+    }
+
+    public void PushTitle()
+    {
+        SceneManager.LoadScene("Title");
     }
 }
