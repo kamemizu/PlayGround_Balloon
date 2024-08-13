@@ -11,7 +11,8 @@ public class GameManager : MonoBehaviour
     {
         Ready,
         InGame,
-        Result
+        Result,
+        Goal
     }
     public static State state;
 
@@ -24,23 +25,33 @@ public class GameManager : MonoBehaviour
     private float readyTimer = 3;
 
     //InGame-----
-    [SerializeField] private Text inGameTimerText;
-    [SerializeField] private Text gameProgress;
+    [SerializeField] private GameObject inGameTimerText;
+    [SerializeField] private GameObject gameProgress;
     [SerializeField] private GameObject balloon;
     [SerializeField] private GameObject finish;
     private float currentPosition;
-    private float inGameTimer = 60;
+    public float inGameTime = 60;
+    private float inGameTimer;
 
     //Result-----
-    private float resultTimer = 2;
     [SerializeField] private GameObject resultPanel;
-    [SerializeField] private GameObject resultProgress;
-    [SerializeField] private static GameObject bestScore;
-    public static float bestTime;
+    [SerializeField] private GameObject resultProgressText;
+    [SerializeField] private GameObject bestProgressText;
+    public static float bestProgress;
+
+    //Goal-----
+    private float goalTimer = 2;
+    [SerializeField] private GameObject goalPanel;
+    [SerializeField] private GameObject goalText;
+    [SerializeField] private GameObject goalTimeText;
+    [SerializeField] private GameObject bestTimeText;
+    private static float bestTime = 60;
+    private float nowTime;
     // Start is called before the first frame update
     void Start()
     {
         state = State.Ready;
+        inGameTimer = inGameTime;
         yoi.SetActive(false);
         start.SetActive(false);
     }
@@ -51,26 +62,39 @@ public class GameManager : MonoBehaviour
         switch (state)
         {
             case State.Ready:
-                ReadyTimer();
+                readyTimer -= Time.deltaTime;
                 ReadyUIActive();
                 break;
             case State.InGame:
-                InGameTimer();
+                inGameTimer -= Time.deltaTime;
+                inGameTimerText.GetComponent<Text>().text = String.Format("Žc‚èŽžŠÔ" + "{0:00.0}", inGameTimer);
                 GameProgress();
                 Finish();
                 break;
             case State.Result:
                 resultPanel.SetActive(true);
-                resultTimer -= Time.deltaTime;
-                resultProgress.GetComponent<Text>().text = String.Format("{0:00.0}" + "m‚·‚·‚ñ‚¾", gameProgress);
+                resultProgressText.GetComponent<Text>().text = String.Format("{0:####.0}" + "m‚·‚·‚ñ‚¾", currentPosition);
+                DisplayBestProgress();
+                break;
+            case State.Goal:
+                goalTimer -= Time.deltaTime;
+                inGameTimerText.SetActive(false);
+                gameProgress.SetActive(false);
+                if (goalTimer < 0)
+                {
+                    goalText.SetActive(false);
+                    goalPanel.SetActive(true);
+                    DisplayBestTime();
+                    goalTimeText.GetComponent<Text>().text = String.Format("‚°‚ñ‚´‚¢‚Ì‚«‚ë‚­\n" + "{0:####.0}" + "‚Ñ‚å‚¤", nowTime);
+                }
+                else
+                {
+                    goalText.SetActive(true);
+                }
+                Debug.Log("Goal");
                 break;
         }
         
-    }
-
-    private void ReadyTimer()
-    {
-        readyTimer -= Time.deltaTime;
     }
     private void ReadyUIActive()
     {
@@ -90,26 +114,43 @@ public class GameManager : MonoBehaviour
             state = State.InGame;
         }
     }
-
-    private void InGameTimer()
-    {
-        inGameTimer -= Time.deltaTime;
-        inGameTimerText.text = String.Format("Žc‚èŽžŠÔ" + "{0:00.0}", inGameTimer);
-    }
     private void GameProgress()
     {
         currentPosition = balloon.transform.position.x;
-        gameProgress.text = String.Format("{0:0}" + "m", currentPosition);
+        gameProgress.GetComponent<Text>().text = String.Format("{0:####.0}" + "m", currentPosition);
     }
     private void Finish()
     {
         if(inGameTimer < 0)
         {
             finish.SetActive(true);
+            inGameTimerText.SetActive(false);
+            gameProgress.SetActive(false);
+            balloon.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         }
         if(inGameTimer < -2)
         {
+            finish.SetActive(false);
             state = State.Result;
         }
+    }
+
+    private void DisplayBestProgress()
+    {
+        if(bestProgress < currentPosition)
+        {
+            bestProgress = currentPosition;
+        }
+        bestProgressText.GetComponent<Text>().text = String.Format("‚³‚¢‚±‚¤‚«‚ë‚­\n" + "{0:####.0}" + "m", bestProgress);
+    }
+
+    private void DisplayBestTime()
+    {
+        nowTime = inGameTime - inGameTimer;
+        if(bestTime > nowTime)
+        {
+            bestTime = nowTime;
+        }
+        bestTimeText.GetComponent<Text>().text = String.Format("‚³‚¢‚»‚­‚«‚ë‚­\n" + "{0:####.0}" + "‚Ñ‚å‚¤", bestTime);
     }
 }

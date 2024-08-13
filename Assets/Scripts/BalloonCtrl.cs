@@ -24,7 +24,7 @@ public class BalloonCtrl : MonoBehaviour
     {
         if(collision.gameObject.tag == "Goal")
         {
-            GameManager.state = GameManager.State.Result;
+            GameManager.state = GameManager.State.Goal;
         } 
     }
 }
