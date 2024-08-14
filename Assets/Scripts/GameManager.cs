@@ -7,6 +7,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+
+    [SerializeField] private GameObject group;
+    private AudioSource bgm;
     //ステート
     public enum State
     {
@@ -51,6 +54,11 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        bgm = GetComponent<AudioSource>();
+        for (int i = -20; i < 37; i++)
+        {
+            Instantiate(group, new Vector3(i * 8.0F, 0, 0), Quaternion.identity);
+        }
         state = State.Ready;
         inGameTimer = inGameTime;
         yoi.SetActive(false);
@@ -64,20 +72,26 @@ public class GameManager : MonoBehaviour
         {
             case State.Ready:
                 readyTimer -= Time.deltaTime;
+                bgm.pitch = 0;
                 ReadyUIActive();
                 break;
             case State.InGame:
+                bgm.pitch = 1;
                 inGameTimer -= Time.deltaTime;
                 inGameTimerText.GetComponent<Text>().text = String.Format("残り時間" + "{0:00.0}", inGameTimer);
                 GameProgress();
                 Finish();
                 break;
             case State.Result:
+                bgm.pitch = 0;
+                balloon.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                 resultPanel.SetActive(true);
                 resultProgressText.GetComponent<Text>().text = String.Format("{0:####.0}" + "mすすんだ", currentPosition);
                 DisplayBestProgress();
                 break;
             case State.Goal:
+                bgm.pitch = 0;
+                balloon.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                 goalTimer -= Time.deltaTime;
                 inGameTimerText.SetActive(false);
                 gameProgress.SetActive(false);
@@ -109,7 +123,7 @@ public class GameManager : MonoBehaviour
             start.SetActive(true);
             stoper.SetActive(false);
         }
-        if (readyTimer < 0)
+        if (readyTimer < -1)
         {
             start.SetActive(false);
             state = State.InGame;
