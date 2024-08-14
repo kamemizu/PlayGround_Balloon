@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject finish;
     private float currentPosition;
     public float inGameTime = 60;
-    private float inGameTimer;
+    public float inGameTimer;
 
     //Result-----
     [SerializeField] private GameObject resultPanel;

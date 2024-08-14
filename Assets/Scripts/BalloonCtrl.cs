@@ -14,7 +14,14 @@ public class BalloonCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rb.AddForce(new Vector2(5.0f, 0));
+        if(transform.position.x < 0)
+        {
+            rb.AddForce(new Vector2(5.0f, 0));
+        }
+        else
+        {
+            rb.AddForce(new Vector2(2.0f, 0));
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
