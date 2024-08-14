@@ -14,10 +14,7 @@ public class BalloonCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            rb.AddForce(transform.right * 1000.0f);
-        }
+        rb.AddForce(new Vector2(5.0f, 0));
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
