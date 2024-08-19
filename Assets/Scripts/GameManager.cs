@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
+    [SerializeField] private GameObject bestScore;
     [SerializeField] private GameObject group;
     private AudioSource bgm;
     //ステート
@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject resultPanel;
     [SerializeField] private GameObject resultProgressText;
     [SerializeField] private GameObject bestProgressText;
-    public static float bestProgress;
+    public static float bestProgress = 0;
 
     //Goal-----
     private float goalTimer = 2;
@@ -54,8 +54,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        bestScore.transform.position = new Vector2(bestProgress,0);
         bgm = GetComponent<AudioSource>();
-        for (int i = -20; i < 37; i++)
+        for (int i = -20; i < 61; i++)
         {
             Instantiate(group, new Vector3(i * 8.0F, 0, 0), Quaternion.identity);
         }

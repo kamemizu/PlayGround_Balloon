@@ -16,17 +16,18 @@ public class BalloonCtrl : MonoBehaviour
     {
         if(transform.position.x < 0)
         {
-            rb.AddForce(new Vector2(5.0f, 0));
+            rb.AddForce(new Vector2(100.0f, 0));
         }
         else
         {
-            rb.AddForce(new Vector2(2.0f, 0));
+            //rb.AddForce(new Vector2(2.0f, 0));
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Goal")
+        //rb.AddForce(new Vector2(10.0f, 0));
+        if (collision.gameObject.tag == "Goal")
         {
             GameManager.state = GameManager.State.Goal;
         } 
